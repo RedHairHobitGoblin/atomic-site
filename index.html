@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>ATOMIC – Bubster coming soon</title>
+<meta name="description" content="Be better. Be atomic. Bubster is coming soon.">
+<style>
+:root{--bg:#000;--fg:#fff;--accent:#f26a28}
+*{box-sizing:border-box}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:"Arial Black",Arial,sans-serif}
+main{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:32px 16px;text-align:center}
+.brand{font-size:clamp(20px,4vw,28px);letter-spacing:.4em;padding-left:.4em}
+video{width:min(360px,86vw);aspect-ratio:9/16;object-fit:cover;border-radius:18px;background:#0b0b0d}
+h1{margin:0;font-size:clamp(40px,10vw,84px);letter-spacing:.04em;line-height:1}
+.soon{color:var(--accent);font-family:Arial,sans-serif;font-weight:700;letter-spacing:.35em;padding-left:.35em;font-size:clamp(14px,3.4vw,22px)}
+form{display:flex;gap:8px;width:min(460px,92vw)}
+input{flex:1;min-width:0;padding:14px 16px;border-radius:10px;border:1px solid #333;background:#111;color:#fff;font-size:16px}
+button{padding:14px 18px;border:0;border-radius:10px;background:var(--accent);color:#000;font-weight:900;font-size:16px;cursor:pointer}
+small{color:#8a8a90;font-family:Arial,sans-serif}
+a{color:#fff}
+</style>
+</head>
+<body>
+<main>
+  <div class="brand">ATOMIC</div>
+  <video src="bubster.mp4" poster="poster.jpg" autoplay muted loop playsinline></video>
+  <h1>BUBSTER</h1>
+  <div class="soon">COMING SOON</div>
+  <!-- TODO: replace YOUR_FORM_ENDPOINT with a form service URL (Formspree, Google Forms, etc.). It does nothing until you do. -->
+  <form action="YOUR_FORM_ENDPOINT" method="POST">
+    <input type="email" name="email" placeholder="Email for the drop" required aria-label="Email">
+    <button type="submit">Notify me</button>
+  </form>
+  <small>Be better. Be atomic. &middot; <a href="https://www.tiktok.com/@atomicmoto">TikTok</a></small>
+</main>
+</body>
+</html>
