@@ -1,9 +1,9 @@
-<!doctype html>
+﻿<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ATOMIC – Bubster coming soon</title>
+<title>ATOMIC - Bubster coming soon</title>
 <meta name="description" content="Be better. Be atomic. Bubster is coming soon.">
 <style>
 :root{--bg:#000;--fg:#fff;--accent:#f26a28}
@@ -27,12 +27,31 @@ a{color:#fff}
   <video src="bubster.mp4" poster="poster.jpg" autoplay muted loop playsinline></video>
   <h1>BUBSTER</h1>
   <div class="soon">COMING SOON</div>
-  <!-- TODO: replace YOUR_FORM_ENDPOINT with a form service URL (Formspree, Google Forms, etc.). It does nothing until you do. -->
-  <form action="YOUR_FORM_ENDPOINT" method="POST">
+  <form id="wl">
     <input type="email" name="email" placeholder="Email for the drop" required aria-label="Email">
+    <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none">
     <button type="submit">Notify me</button>
   </form>
+  <div id="wlmsg" role="status" style="min-height:20px;font-family:Arial,sans-serif;color:#8a8a92"></div>
+  <a href="customize.html" style="color:var(--accent);font-family:Arial,sans-serif;font-weight:700">Customize your Bubster &rarr;</a>
   <small>Be better. Be atomic. &middot; <a href="https://www.tiktok.com/@atomicmoto">TikTok</a></small>
 </main>
+<script src="config.js"></script>
+<script>
+// Waitlist: sends each signup to your inbox through Web3Forms. Put your key in config.js.
+document.getElementById('wl').addEventListener('submit',async e=>{
+  e.preventDefault();
+  const msg=document.getElementById('wlmsg'),f=e.target,key=(window.ATOMIC||{}).WEB3FORMS_KEY;
+  if(!key){msg.textContent='The waitlist opens very soon. Follow @atomicmoto on TikTok in the meantime.';return}
+  if(f.botcheck.checked)return;
+  msg.textContent='Adding you...';
+  try{
+    const r=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:key,subject:'Bubster waitlist signup',from_name:'ATOMIC site',email:f.email.value})});
+    const j=await r.json();
+    if(j.success){msg.textContent="You're on the list. We'll email you once, when it's ready.";f.reset()}else msg.textContent='Something went wrong. Try again in a minute.';
+  }catch(err){msg.textContent='Could not reach the server. Check your connection and try again.'}
+});
+</script>
 </body>
 </html>
+
