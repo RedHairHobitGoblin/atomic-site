@@ -103,9 +103,6 @@ pre{padding:10px;overflow:auto;max-height:180px}
       <div id="pmsg" class="note" style="min-height:18px;margin-top:8px"></div>
       <h2>Health, last 14 days</h2>
       <svg id="pspark" viewBox="0 0 280 60" style="width:100%;height:60px"></svg>
-      <h2>Global chart</h2>
-      <div id="plb"></div>
-      <p class="note">Sample riders for this preview, not real people. A real chart would need accounts and a server.</p>
     </div>
 
     <div class="card" style="margin-top:16px">
@@ -193,7 +190,6 @@ let pet=Object.assign({},PET_DEF);
 try{const s=localStorage.getItem('bubster-pet');if(s)pet=Object.assign({},PET_DEF,JSON.parse(s))}catch(e){}
 const MOODS=h=>h<20?['Sleepy and mellow','Falling asleep']:h<45?['Mellow','Bored']:h<75?['Content','Cruising']:h<90?['Happy','Happy idle']:['Thriving','Perfect balance'];
 const UNLOCKS=[[2,'Blush'],[3,'Bandana'],[4,'Sparkle eyes'],[5,'Star eyes']];
-const SAMPLE=[['Nova',96],['Dune',91],['Pixel',84],['Ziggy',77],['Moto',68],['Echo',59],['Rue',52],['Kit',44],['Sol',36],['Bean',27]];
 const lvl=()=>Math.floor(pet.xp/100)+1;
 let petTimer=null;
 function petFace(){post({type:'jump',name:MOODS(pet.health)[1],loop:true})}
@@ -209,9 +205,6 @@ function petRender(face=true){
   $('pun').innerHTML=UNLOCKS.map(([l,n])=>`<span class="chip${lvl()>=l?' on':''}">L${l} ${n}</span>`).join('');
   const h=pet.hist,w=280/Math.max(1,13);
   $('pspark').innerHTML=h.length>1?`<polyline fill="none" stroke="#f26a28" stroke-width="3" stroke-linejoin="round" points="${h.map((v,i)=>(i*w).toFixed(1)+','+(55-v*0.5).toFixed(1)).join(' ')}"/>`:'';
-  const rows=SAMPLE.map(([n,v])=>({n,v})).concat([{n:'You',v:Math.round(pet.health),me:true}]).sort((a,b)=>b.v-a.v);
-  const rank=rows.findIndex(r=>r.me)+1,show=rows.slice(0,5);if(rank>5)show.push(rows[rank-1]);
-  $('plb').innerHTML=show.map(r=>`<div class="lb${r.me?' me':''}"><span>#${rows.indexOf(r)+1} ${r.n}</span><span>${r.v}</span></div>`).join('')+`<div class="note" style="margin-top:6px">Your rank: #${rank} of ${rows.length}</div>`;
   try{localStorage.setItem('bubster-pet',JSON.stringify(pet))}catch(e){}
   if(face)petFace();
 }
