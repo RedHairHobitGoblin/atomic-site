@@ -34,6 +34,12 @@ button.b.p{background:var(--acc);color:#000}
 code,pre{background:#16161a;border-radius:8px;font-size:12px;color:#c8c8d0}
 pre{padding:10px;overflow:auto;max-height:180px}
 .note{font-size:13px;color:var(--mut);line-height:1.45}
+.bar{height:14px;background:#1b1b20;border-radius:8px;overflow:hidden}
+.bar>i{display:block;height:100%;background:var(--acc);transition:width .3s}
+.chip{display:inline-block;margin:0 6px 6px 0;padding:5px 10px;border-radius:999px;font-size:13px;background:#1b1b20;color:var(--mut)}
+.chip.on{background:var(--acc);color:#000;font-weight:700}
+.lb{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--line);font-size:14px}
+.lb.me{color:var(--acc);font-weight:700}
 </style>
 </head>
 <body>
@@ -74,6 +80,32 @@ pre{padding:10px;overflow:auto;max-height:180px}
       <h2>Test angle: <span id="av">0</span>&deg;</h2>
       <input type="range" id="ang" min="0" max="70" value="0">
       <div class="zone" id="zn"></div>
+    </div>
+
+    <div class="card" style="margin-top:16px">
+      <h2>Pet (preview)</h2>
+      <p class="note">Try how Bubster's health could work. Points reward control, not big angles, and he never dies: low health just makes him mellow. Nothing here runs on a real device yet.</p>
+      <div class="row"><span id="pmood" style="color:#fff;font-weight:700"></span><span id="phv"></span></div>
+      <div class="bar"><i id="phb"></i></div>
+      <div class="row" style="margin-top:8px"><span>Level <b id="plv" style="color:#fff"></b> &middot; XP <span id="pxp"></span></span><span>Streak <b id="pstk" style="color:#fff"></b> days &middot; Day <span id="pday"></span></span></div>
+      <div class="row"><span>Trick points today (daily cap)</span><span id="pcap"></span></div>
+      <div id="pun" style="margin:10px 0"></div>
+      <div class="btns">
+        <button class="b p" id="pSmooth">Smooth wheelie</button>
+        <button class="b p" id="pLong">Long balance (5 s+)</button>
+        <button class="b" id="pLand">Clean landing</button>
+        <button class="b" id="pRough">Rough landing</button>
+        <button class="b" id="pRide">Ride today</button>
+        <button class="b" id="pNext">Next day</button>
+        <button class="b" id="pWeek">Skip a week</button>
+        <button class="b" id="pReset">Reset pet</button>
+      </div>
+      <div id="pmsg" class="note" style="min-height:18px;margin-top:8px"></div>
+      <h2>Health, last 14 days</h2>
+      <svg id="pspark" viewBox="0 0 280 60" style="width:100%;height:60px"></svg>
+      <h2>Global chart</h2>
+      <div id="plb"></div>
+      <p class="note">Sample riders for this preview, not real people. A real chart would need accounts and a server.</p>
     </div>
 
     <div class="card" style="margin-top:16px">
@@ -155,6 +187,45 @@ $('send').onclick=async()=>{
     say('Sent! Your Bubster now looks like this.');
   }catch(e){say('Send failed: '+(e&&e.message||e))}
 };
+// ---- Pet simulator (preview only): health, XP, streak, mellow mode. Not on a real device yet.
+const PET_DEF={health:50,xp:0,streak:0,day:1,ridden:false,earned:0,hist:[50]},CAP=20;
+let pet=Object.assign({},PET_DEF);
+try{const s=localStorage.getItem('bubster-pet');if(s)pet=Object.assign({},PET_DEF,JSON.parse(s))}catch(e){}
+const MOODS=h=>h<20?['Sleepy and mellow','Falling asleep']:h<45?['Mellow','Bored']:h<75?['Content','Cruising']:h<90?['Happy','Happy idle']:['Thriving','Perfect balance'];
+const UNLOCKS=[[2,'Blush'],[3,'Bandana'],[4,'Sparkle eyes'],[5,'Star eyes']];
+const SAMPLE=[['Nova',96],['Dune',91],['Pixel',84],['Ziggy',77],['Moto',68],['Echo',59],['Rue',52],['Kit',44],['Sol',36],['Bean',27]];
+const lvl=()=>Math.floor(pet.xp/100)+1;
+let petTimer=null;
+function petFace(){post({type:'jump',name:MOODS(pet.health)[1],loop:true})}
+function reward(h,xp){const room=Math.max(0,CAP-pet.earned),g=Math.min(h,room);pet.earned+=g;pet.health=Math.min(100,pet.health+g);
+  if(g>0){const before=lvl();pet.xp+=xp;if(lvl()>before){$('pmsg').textContent='Level up! Level '+lvl()+'.';post({type:'jump',name:'Hype mode',loop:true});clearTimeout(petTimer);petTimer=setTimeout(petFace,2600);return true}}
+  else $('pmsg').textContent='Daily trick cap reached. Ride again tomorrow.';
+  return false}
+function nextDay(){if(!pet.ridden){pet.streak=0;pet.health=Math.max(5,pet.health-4)}pet.hist.push(Math.round(pet.health));pet.hist=pet.hist.slice(-14);pet.day++;pet.ridden=false;pet.earned=0}
+function petRender(face=true){
+  const m=MOODS(pet.health);
+  $('pmood').textContent=m[0];$('phv').textContent='Health '+Math.round(pet.health)+' / 100';$('phb').style.width=pet.health+'%';
+  $('plv').textContent=lvl();$('pxp').textContent=pet.xp;$('pstk').textContent=pet.streak;$('pday').textContent=pet.day;$('pcap').textContent=Math.round(pet.earned)+' / '+CAP;
+  $('pun').innerHTML=UNLOCKS.map(([l,n])=>`<span class="chip${lvl()>=l?' on':''}">L${l} ${n}</span>`).join('');
+  const h=pet.hist,w=280/Math.max(1,13);
+  $('pspark').innerHTML=h.length>1?`<polyline fill="none" stroke="#f26a28" stroke-width="3" stroke-linejoin="round" points="${h.map((v,i)=>(i*w).toFixed(1)+','+(55-v*0.5).toFixed(1)).join(' ')}"/>`:'';
+  const rows=SAMPLE.map(([n,v])=>({n,v})).concat([{n:'You',v:Math.round(pet.health),me:true}]).sort((a,b)=>b.v-a.v);
+  const rank=rows.findIndex(r=>r.me)+1,show=rows.slice(0,5);if(rank>5)show.push(rows[rank-1]);
+  $('plb').innerHTML=show.map(r=>`<div class="lb${r.me?' me':''}"><span>#${rows.indexOf(r)+1} ${r.n}</span><span>${r.v}</span></div>`).join('')+`<div class="note" style="margin-top:6px">Your rank: #${rank} of ${rows.length}</div>`;
+  try{localStorage.setItem('bubster-pet',JSON.stringify(pet))}catch(e){}
+  if(face)petFace();
+}
+const A=(id,fn)=>$(id).onclick=()=>{$('pmsg').textContent='';const up=fn();petRender(!up);};
+A('pSmooth',()=>reward(6,15));
+A('pLong',()=>reward(10,25));
+A('pLand',()=>reward(4,10));
+A('pRough',()=>{pet.health=Math.max(5,pet.health-3);$('pmsg').textContent='Ouch. A rough landing costs a little health.'});
+A('pRide',()=>{if(pet.ridden){$('pmsg').textContent='Already counted a ride today.';return}pet.ridden=true;pet.streak++;return reward(3,10)});
+A('pNext',()=>{nextDay();$('pmsg').textContent=pet.streak?'New day. Streak: '+pet.streak+'.':'New day. No ride yesterday, so he got a bit more mellow.'});
+A('pWeek',()=>{for(let i=0;i<7;i++)nextDay();$('pmsg').textContent='A week with no riding. He is much more mellow.'});
+A('pReset',()=>{pet=Object.assign({},PET_DEF,{hist:[50]});$('pmsg').textContent='Pet reset.'});
+frame.addEventListener('load',()=>setTimeout(()=>petRender(true),150));
+petRender(false);
 load();
 </script>
 </body>
