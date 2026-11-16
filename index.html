@@ -1,23 +1,41 @@
-﻿<!doctype html>
+<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>ATOMIC - Bubster coming soon</title>
-<meta name="description" content="Be better. Be atomic. Bubster is coming soon.">
+<title>Bubster by ATOMIC - your bike has feelings</title>
+<meta name="description" content="Bubster is a little face for your handlebars that reacts to how you ride. Coming soon from ATOMIC.">
+<meta property="og:title" content="Bubster by ATOMIC">
+<meta property="og:description" content="Your bike has feelings. Coming soon.">
+<meta property="og:image" content="https://beatomic.us/poster.jpg">
 <style>
-:root{--bg:#000;--fg:#fff;--accent:#f26a28}
+:root{--bg:#000;--card:#0f0f12;--line:#26262c;--fg:#fff;--mut:#9a9aa2;--accent:#f26a28}
 *{box-sizing:border-box}
-html,body{margin:0;background:var(--bg);color:var(--fg);font-family:"Arial Black",Arial,sans-serif}
-main{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:28px;padding:32px 16px;text-align:center}
-.brand{font-size:clamp(20px,4vw,28px);letter-spacing:.4em;padding-left:.4em}
-video{width:min(360px,86vw);aspect-ratio:9/16;object-fit:cover;border-radius:18px;background:#0b0b0d}
-h1{margin:0;font-size:clamp(40px,10vw,84px);letter-spacing:.04em;line-height:1}
-.soon{color:var(--accent);font-family:Arial,sans-serif;font-weight:700;letter-spacing:.35em;padding-left:.35em;font-size:clamp(14px,3.4vw,22px)}
-form{display:flex;gap:8px;width:min(460px,92vw)}
-input{flex:1;min-width:0;padding:14px 16px;border-radius:10px;border:1px solid #333;background:#111;color:#fff;font-size:16px}
+html,body{margin:0;background:var(--bg);color:var(--fg);font-family:Arial,sans-serif}
+main{display:flex;flex-direction:column;align-items:center;gap:26px;padding:36px 16px 20px;text-align:center}
+.brand{font-family:"Arial Black",Arial,sans-serif;font-size:clamp(20px,4vw,28px);letter-spacing:.4em;padding-left:.4em}
+video{width:min(340px,84vw);aspect-ratio:9/16;object-fit:cover;border-radius:18px;background:#0b0b0d}
+h1{margin:0;font-family:"Arial Black",Arial,sans-serif;font-size:clamp(40px,10vw,84px);letter-spacing:.04em;line-height:1}
+.line{font-size:clamp(18px,4.4vw,26px);font-weight:700}
+.soon{color:var(--accent);font-weight:700;letter-spacing:.35em;padding-left:.35em;font-size:clamp(14px,3.4vw,20px)}
+form{display:flex;flex-direction:column;gap:10px;width:min(460px,92vw);text-align:left}
+.rowf{display:flex;gap:8px}
+input[type=email],input[type=text]{flex:1;min-width:0;padding:14px 16px;border-radius:10px;border:1px solid #333;background:#111;color:#fff;font-size:16px}
 button{padding:14px 18px;border:0;border-radius:10px;background:var(--accent);color:#000;font-weight:900;font-size:16px;cursor:pointer}
-small{color:#8a8a90;font-family:Arial,sans-serif}
+label.chk{display:flex;gap:10px;align-items:flex-start;font-size:14px;color:var(--mut)}
+label.chk input{margin-top:2px;width:18px;height:18px;accent-color:var(--accent)}
+#wlmsg{min-height:20px;color:var(--mut);font-size:15px}
+.small{color:var(--mut);font-size:13px;line-height:1.5;max-width:460px}
+section{width:min(760px,92vw);margin:0 auto;padding:26px 0;border-top:1px solid var(--line)}
+h2{font-family:"Arial Black",Arial,sans-serif;font-size:22px;margin:0 0 14px;letter-spacing:.02em}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:16px;text-align:left}
+.card b{display:block;margin-bottom:6px}
+.card p{margin:0;color:var(--mut);font-size:15px;line-height:1.5}
+details{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px 16px;margin-bottom:8px}
+summary{cursor:pointer;font-weight:700}
+details p{color:var(--mut);margin:10px 0 0;line-height:1.5}
+footer{text-align:center;color:var(--mut);font-size:13px;padding:26px 16px 40px;border-top:1px solid var(--line)}
 a{color:#fff}
 </style>
 </head>
@@ -26,26 +44,53 @@ a{color:#fff}
   <div class="brand">ATOMIC</div>
   <video src="bubster.mp4" poster="poster.jpg" autoplay muted loop playsinline></video>
   <h1>BUBSTER</h1>
+  <div class="line">Your bike has feelings.</div>
   <div class="soon">COMING SOON</div>
   <form id="wl">
-    <input type="email" name="email" placeholder="Email for the drop" required aria-label="Email">
+    <div class="rowf">
+      <input type="email" name="email" placeholder="Email for the drop" required aria-label="Email">
+      <button type="submit">Notify me</button>
+    </div>
+    <input type="text" name="heard" maxlength="60" placeholder="Who told you about Bubster? (optional)" aria-label="Who told you about Bubster">
+    <label class="chk"><input type="checkbox" name="age13" required> <span>I'm 13 or older.</span></label>
     <input type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" style="display:none">
-    <button type="submit">Notify me</button>
   </form>
-  <div id="wlmsg" role="status" style="min-height:20px;font-family:Arial,sans-serif;color:#8a8a92"></div>
-  <small>Be better. Be atomic. &middot; <a href="https://www.tiktok.com/@atomicmoto">TikTok</a></small>
+  <div id="wlmsg" role="status"></div>
+  <p class="small">We only keep your email, and only to tell you when Bubster is ready. We never sell or share it. To be removed, reply to our launch email or message <a href="https://www.tiktok.com/@atomicmoto">@atomicmoto</a>.</p>
 </main>
+
+<section>
+  <h2>What is it?</h2>
+  <div class="grid">
+    <div class="card"><b>A face for your bars</b><p>A small round screen that clamps flat onto your handlebars.</p></div>
+    <div class="card"><b>He reacts to your ride</b><p>Lift the front, hold a balance, hit a bump, brake hard. He feels it and shows it.</p></div>
+    <div class="card"><b>He's yours</b><p>Pick his name and colour. Ride often and he levels up and unlocks new looks.</p></div>
+  </div>
+</section>
+
+
+<section>
+  <h2>Questions</h2>
+  <details><summary>When can I get one?</summary><p>Bubster is still being built and tested. Join the waitlist and you'll hear first. We won't take money until it works on a real bike.</p></details>
+  <details><summary>How much will it cost?</summary><p>The price isn't final. The waitlist gets it first, along with a founder price.</p></details>
+  <details><summary>Which bikes does it fit?</summary><p>It clamps to standard handlebars. We'll list exact sizes before launch.</p></details>
+  <details><summary>Is it a speedometer?</summary><p>No. He's a buddy, not a gauge.</p></details>
+</section>
+
+<footer>Be better. Be atomic. &middot; <a href="https://www.tiktok.com/@atomicmoto">TikTok</a></footer>
+
 <script src="config.js"></script>
 <script>
-// Waitlist: sends each signup to your inbox through Web3Forms. Put your key in config.js.
+// Waitlist: sends each signup to your inbox through Web3Forms. The key lives in config.js.
 document.getElementById('wl').addEventListener('submit',async e=>{
   e.preventDefault();
   const msg=document.getElementById('wlmsg'),f=e.target,key=(window.ATOMIC||{}).WEB3FORMS_KEY;
   if(!key){msg.textContent='The waitlist opens very soon. Follow @atomicmoto on TikTok in the meantime.';return}
   if(f.botcheck.checked)return;
+  if(!f.age13.checked){msg.textContent='You need to be 13 or older to join.';return}
   msg.textContent='Adding you...';
   try{
-    const r=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:key,subject:'Bubster waitlist signup',from_name:'ATOMIC site',email:f.email.value})});
+    const r=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:key,subject:'Bubster waitlist signup',from_name:'ATOMIC site',email:f.email.value,heard_from:f.heard.value||'(not given)',confirmed_13_plus:'yes'})});
     const j=await r.json();
     if(j.success){msg.textContent="You're on the list. We'll email you once, when it's ready.";f.reset()}else msg.textContent='Something went wrong. Try again in a minute.';
   }catch(err){msg.textContent='Could not reach the server. Check your connection and try again.'}
@@ -53,4 +98,3 @@ document.getElementById('wl').addEventListener('submit',async e=>{
 </script>
 </body>
 </html>
-
